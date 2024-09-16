@@ -1,17 +1,14 @@
 package com.javaproject.notificationservice.repository;
 
-import com.javaproject.notificationservice.entity.Notification;
+import com.javaproject.notificationservice.entity.NotificationEntity;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface NotificationRepository extends CrudRepository<Notification, Long>{
-    Notification findAllById(long userId);
+import java.util.List;
 
-    // TODO - COLOCAR ISSO AQUI NA HORA DE CHAMAR O FIND:
-    // Repositorio.findById(id)
-    //        .orElseThrow(() -> new ObjetoNaoEncontradoException("SeuObjeto com id " + id + " não foi encontrado"));
+@Repository
+public interface NotificationRepository extends CrudRepository<NotificationEntity, Long>{
 
-    @Override
-    default <S extends Notification> S save(S entity) {
-        return null;
-    }
+    List<NotificationEntity> findAllByUserId(Long userId);
+
 }
