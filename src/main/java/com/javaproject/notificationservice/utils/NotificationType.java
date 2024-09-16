@@ -1,17 +1,17 @@
 package com.javaproject.notificationservice.utils;
 
 public enum NotificationType {
-    MARKETING("marketing"),
-    NEWS("news"),
-    STATUS("status");
+    MARKETING,
+    NEWS,
+    STATUS;
 
-    private final String descrption;
 
-    NotificationType(String descrption) {
-        this.descrption = descrption;
+    NotificationType() {
     }
 
-    public String getDescrption() {
-        return descrption;
+
+    public static NotificationType fromString(String text){
+        return NotificationType.valueOf(text.toUpperCase().trim());
     }
+
 }
