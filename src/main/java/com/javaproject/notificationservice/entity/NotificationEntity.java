@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import static jakarta.persistence.EnumType.STRING;
 
@@ -34,5 +35,18 @@ public class NotificationEntity implements Serializable {
 
     public NotificationType getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NotificationEntity that = (NotificationEntity) o;
+        return Objects.equals(id, that.id) && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type);
     }
 }
