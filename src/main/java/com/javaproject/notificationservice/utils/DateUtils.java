@@ -15,7 +15,6 @@ public class DateUtils {
     private static final DateTimeFormatter FORMATTER = ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSSSS");
 
     public static String formatDate(Date date) {
-        // Converte Date para LocalDateTime
         LocalDateTime localDateTime = LocalDateTime.ofInstant(date.toInstant(), systemDefault());
 
         return localDateTime.format(FORMATTER);
