@@ -1,12 +1,11 @@
 package com.javaproject.notificationservice.utils;
 
 import java.time.LocalDateTime;
+import static java.time.ZoneId.systemDefault;
 import java.time.format.DateTimeFormatter;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import java.util.Calendar;
 import java.util.Date;
-
-import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.time.ZoneId.systemDefault;
 
 
 public class DateUtils {
@@ -26,10 +25,10 @@ public class DateUtils {
         return cal.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static Date getDateWithHourMinusThree(Date date){
+    public static Date getDateWithHourMinusOne(Date date){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.HOUR, -3);
+        cal.add(Calendar.HOUR, -1);
         return cal.getTime();
     }
 

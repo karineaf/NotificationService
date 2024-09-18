@@ -1,22 +1,22 @@
 package com.javaproject.notificationservice.services.strategy;
 
-import com.javaproject.notificationservice.entity.NotificationEntity;
-import com.javaproject.notificationservice.entity.NotificationKeyEntity;
-import com.javaproject.notificationservice.gateway.Gateway;
-import com.javaproject.notificationservice.repository.NotificationRepository;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import static org.slf4j.LoggerFactory.getLogger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.javaproject.notificationservice.entity.NotificationEntity;
+import com.javaproject.notificationservice.entity.NotificationKeyEntity;
+import com.javaproject.notificationservice.gateway.Gateway;
+import com.javaproject.notificationservice.repository.NotificationRepository;
 import static com.javaproject.notificationservice.utils.ConstantsUtils.MARKETING_MAX_REQUESTS;
 import static com.javaproject.notificationservice.utils.ConstantsUtils.SENT_STATUS_OK;
-import static com.javaproject.notificationservice.utils.DateUtils.getDateWithHourMinusThree;
+import static com.javaproject.notificationservice.utils.DateUtils.getDateWithHourMinusOne;
 import static com.javaproject.notificationservice.utils.NotificationType.MARKETING;
-import static org.slf4j.LoggerFactory.getLogger;
 
 @Component("MARKETING")
 public class MarketingNotificationStrategy implements NotificationStrategy{
@@ -32,7 +32,7 @@ public class MarketingNotificationStrategy implements NotificationStrategy{
     @Override
     public void send(Long userId, String message) {
 
-        Date nowMinusThreeHours = getDateWithHourMinusThree(new Date());
+        Date nowMinusThreeHours = getDateWithHourMinusOne(new Date());
         List<NotificationEntity> notifications = repository.findAllByIdUserIdAndType(userId, MARKETING.name());
 
         if (notifications.isEmpty()) {
