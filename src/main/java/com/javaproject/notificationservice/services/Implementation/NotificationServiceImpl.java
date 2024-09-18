@@ -2,15 +2,20 @@ package com.javaproject.notificationservice.services.Implementation;
 
 import com.javaproject.notificationservice.services.NotificationService;
 import com.javaproject.notificationservice.services.strategy.NotificationStrategy;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
     private final Map<String, NotificationStrategy> strategies;
+
+    private static final  Logger log = getLogger(NotificationServiceImpl.class);
 
     @Autowired
     public NotificationServiceImpl(Map<String, NotificationStrategy> strategies) {
@@ -27,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             strategy.send(userId, message);
         } catch (IllegalArgumentException ex){
-            System.out.printf("Could not send the message to customer %s. Error: %s%n", userId, ex);
+            log.error("Could not send the message to customer %s. Error: %s".formatted(userId, ex));
         }
     }
 }

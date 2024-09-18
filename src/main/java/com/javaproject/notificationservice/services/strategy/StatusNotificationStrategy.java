@@ -4,6 +4,7 @@ import com.javaproject.notificationservice.entity.NotificationEntity;
 import com.javaproject.notificationservice.entity.NotificationKeyEntity;
 import com.javaproject.notificationservice.gateway.Gateway;
 import com.javaproject.notificationservice.repository.NotificationRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,8 @@ import static com.javaproject.notificationservice.utils.ConstantsUtils.SENT_STAT
 import static com.javaproject.notificationservice.utils.ConstantsUtils.STATUS_MAX_REQUESTS;
 import static com.javaproject.notificationservice.utils.DateUtils.getDateWithMinuteMinusOne;
 import static com.javaproject.notificationservice.utils.NotificationType.STATUS;
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 
 @Component("STATUS")
@@ -24,6 +27,9 @@ public class StatusNotificationStrategy implements NotificationStrategy {
 
     @Autowired
     private NotificationRepository repository;
+
+    private static final Logger log = getLogger(StatusNotificationStrategy.class);
+
 
     @Override
     public void send(Long userId, String message) {
@@ -53,7 +59,7 @@ public class StatusNotificationStrategy implements NotificationStrategy {
                     if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
                         repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), STATUS.name()));
                 } else {
-                    System.out.println("Notifications of type Status was already sent to costumer at the last minute.");
+                    log.info("Status notifications have already been sent to this customer in the last minute.");
                 }
             }
         }

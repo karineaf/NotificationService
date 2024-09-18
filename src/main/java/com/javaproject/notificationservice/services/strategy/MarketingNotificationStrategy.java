@@ -4,6 +4,7 @@ import com.javaproject.notificationservice.entity.NotificationEntity;
 import com.javaproject.notificationservice.entity.NotificationKeyEntity;
 import com.javaproject.notificationservice.gateway.Gateway;
 import com.javaproject.notificationservice.repository.NotificationRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import static com.javaproject.notificationservice.utils.ConstantsUtils.MARKETING
 import static com.javaproject.notificationservice.utils.ConstantsUtils.SENT_STATUS_OK;
 import static com.javaproject.notificationservice.utils.DateUtils.getDateWithHourMinusThree;
 import static com.javaproject.notificationservice.utils.NotificationType.MARKETING;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Component("MARKETING")
 public class MarketingNotificationStrategy implements NotificationStrategy{
@@ -24,6 +26,8 @@ public class MarketingNotificationStrategy implements NotificationStrategy{
 
     @Autowired
     private NotificationRepository repository;
+
+    private static final Logger log = getLogger(MarketingNotificationStrategy.class);
 
     @Override
     public void send(Long userId, String message) {
@@ -52,7 +56,7 @@ public class MarketingNotificationStrategy implements NotificationStrategy{
                     if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
                         repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), MARKETING.name()));
                 } else {
-                    System.out.println("Notifications of type marketing was already sent to costumer in the last 3 hours.");
+                    log.info("Marketing notifications have already been sent in the last three hours");
                 }
             }
         }
