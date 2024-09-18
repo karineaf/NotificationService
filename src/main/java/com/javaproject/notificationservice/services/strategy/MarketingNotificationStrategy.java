@@ -32,7 +32,7 @@ public class MarketingNotificationStrategy implements NotificationStrategy{
     @Override
     public void send(Long userId, String message) {
 
-        Date nowMinusThreeHours = getDateWithHourMinusOne(new Date());
+        Date nowMinusOneHour = getDateWithHourMinusOne(new Date());
         List<NotificationEntity> notifications = repository.findAllByIdUserIdAndType(userId, MARKETING.name());
 
         if (notifications.isEmpty()) {
@@ -41,7 +41,7 @@ public class MarketingNotificationStrategy implements NotificationStrategy{
 
         } else {
             List<NotificationEntity> lastPeriodNotifications = notifications.stream()
-                    .filter(n -> n.getId().getSentDate().after(nowMinusThreeHours)).toList();
+                    .filter(n -> n.getId().getSentDate().after(nowMinusOneHour)).toList();
 
             if (lastPeriodNotifications.isEmpty() || lastPeriodNotifications.size() < MARKETING_MAX_REQUESTS){
                 String messageDeliveredStatus = gateway.send(userId, message);
