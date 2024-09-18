@@ -1,2 +1,5 @@
-INSERT INTO notification (user_id, type, sent_date) VALUES (1L, 'marketing', '2024-09-13 22:15')
-INSERT INTO notification (user_id, type, sent_date)  VALUES (1L, 'marketing', '2024-09-13 22:30')
+INSERT INTO notification (user_id, type, sent_date) VALUES (1L, 'MARKETING', '2024-09-13 22:15:01')
+INSERT INTO notification (user_id, type, sent_date)  VALUES (1L, 'MARKETING', '2024-09-13 22:30:02')
+INSERT INTO notification (user_id, type, sent_date)  VALUES (2L, 'MARKETING', '2024-09-13 22:30:03')
+INSERT INTO notification (user_id, type, sent_date)  VALUES (1L, 'MARKETING', '2024-09-17 20:30:04')
+INSERT INTO notification (user_id, type, sent_date)  VALUES (1L, 'STATUS', '2024-09-13 22:30:05')
