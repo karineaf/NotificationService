@@ -32,33 +32,30 @@ public class MarketingNotificationStrategy implements NotificationStrategy{
     @Override
     public void send(Long userId, String message) {
 
-        Date nowDate = new Date();
-        Date nowMinusThreeHours = getDateWithHourMinusThree(nowDate);
+        Date nowMinusThreeHours = getDateWithHourMinusThree(new Date());
         List<NotificationEntity> notifications = repository.findAllByIdUserIdAndType(userId, MARKETING.name());
-        if (notifications.isEmpty()) {
-            String message_delivered_status = gateway.send(userId, message);
 
-            if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), MARKETING.name()));
+        if (notifications.isEmpty()) {
+            String messageDeliveredStatus = gateway.send(userId, message);
+            save(messageDeliveredStatus, userId);
+
         } else {
             List<NotificationEntity> lastPeriodNotifications = notifications.stream()
                     .filter(n -> n.getId().getSentDate().after(nowMinusThreeHours)).toList();
-            if (lastPeriodNotifications.isEmpty()){
-                String message_delivered_status = gateway.send(userId, message);
 
-                if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                    repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), MARKETING.name()));
+            if (lastPeriodNotifications.isEmpty() || lastPeriodNotifications.size() < MARKETING_MAX_REQUESTS){
+                String messageDeliveredStatus = gateway.send(userId, message);
+                save(messageDeliveredStatus, userId);
             }
             else {
-                if (lastPeriodNotifications.size() < MARKETING_MAX_REQUESTS) {
-                    String message_delivered_status = gateway.send(userId, message);
-
-                    if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                        repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), MARKETING.name()));
-                } else {
-                    log.info("Marketing notifications have already been sent in the last three hours");
-                }
+                log.info("Marketing notifications have already been sent in the last 3 hours");
             }
         }
+    }
+
+    @Override
+    public void save(String messageDeliveredStatus, Long userId) {
+        if (Objects.equals(messageDeliveredStatus, SENT_STATUS_OK))
+            repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), MARKETING.name()));
     }
 }

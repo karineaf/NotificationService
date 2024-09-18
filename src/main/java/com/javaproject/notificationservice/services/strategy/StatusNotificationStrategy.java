@@ -34,34 +34,30 @@ public class StatusNotificationStrategy implements NotificationStrategy {
     @Override
     public void send(Long userId, String message) {
 
-        Date nowDate = new Date();
-        Date nowMinusOneMinute = getDateWithMinuteMinusOne(nowDate);
+        Date nowMinusOneMinute = getDateWithMinuteMinusOne(new Date());
 
         List<NotificationEntity> notifications = repository.findAllByIdUserIdAndType(userId, STATUS.name());
         if (notifications.isEmpty()) {
-            String message_delivered_status = gateway.send(userId, message);
-
-            if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), STATUS.name()));
+            String messageDeliveredStatus = gateway.send(userId, message);
+            save(messageDeliveredStatus, userId);
         } else {
+
             List<NotificationEntity> lastPeriodNotifications = notifications.stream()
                     .filter(n -> n.getId().getSentDate().after(nowMinusOneMinute)).toList();
-            if (lastPeriodNotifications.isEmpty()){
-                String message_delivered_status = gateway.send(userId, message);
 
-                if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                    repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), STATUS.name()));
+            if (lastPeriodNotifications.isEmpty() || lastPeriodNotifications.size() < STATUS_MAX_REQUESTS){
+                String messageDeliveredStatus = gateway.send(userId, message);
+                save(messageDeliveredStatus, userId);
             }
             else {
-                if(lastPeriodNotifications.size() < STATUS_MAX_REQUESTS){
-                    String message_delivered_status = gateway.send(userId, message);
-
-                    if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                        repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), STATUS.name()));
-                } else {
-                    log.info("Status notifications have already been sent to this customer in the last minute.");
-                }
+                log.info("Status notifications have already been sent to this customer in the last minute.");
             }
         }
+    }
+
+    @Override
+    public void save(String messageDeliveredStatus, Long userId) {
+        if (Objects.equals(messageDeliveredStatus, SENT_STATUS_OK))
+            repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), STATUS.name()));
     }
 }

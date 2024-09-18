@@ -32,28 +32,30 @@ public class NewsNotificationStrategy implements NotificationStrategy {
     @Override
     public void send(Long userId, String message) {
 
-        Date nowDate = new Date();
-        int todayNumber = getDayOfYear(nowDate);
+        int todayNumber = getDayOfYear(new Date());
 
         List<NotificationEntity> notifications = repository.findAllByIdUserIdAndType(userId, NEWS.name());
         if (notifications.isEmpty()) {
-            String message_delivered_status = gateway.send(userId, message);
+            String messageDeliveredStatus = gateway.send(userId, message);
+            save(messageDeliveredStatus, userId);
+        } else {
 
-            if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS.name()));
-        }
-        else {
             List<NotificationEntity> lastPeriodNotifications = notifications.stream()
                     .filter(n -> todayNumber == getDayOfYear(n.getId().getSentDate())).toList();
-            if (lastPeriodNotifications.isEmpty()){
-                String message_delivered_status = gateway.send(userId, message);
 
-                if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                    repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS.name()));
+            if (lastPeriodNotifications.isEmpty()){
+                String messageDeliveredStatus = gateway.send(userId, message);
+                save(messageDeliveredStatus, userId);
             }
             else {
                 log.info("News notifications have already been sent to this customer today.");
             }
         }
+    }
+
+    @Override
+    public void save(String messageDeliveredStatus, Long userId) {
+        if (Objects.equals(messageDeliveredStatus, SENT_STATUS_OK))
+            repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS.name()));
     }
 }
