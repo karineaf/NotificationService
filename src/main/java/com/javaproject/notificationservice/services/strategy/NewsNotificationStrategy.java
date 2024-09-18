@@ -4,9 +4,8 @@ import com.javaproject.notificationservice.entity.NotificationEntity;
 import com.javaproject.notificationservice.entity.NotificationKeyEntity;
 import com.javaproject.notificationservice.gateway.Gateway;
 import com.javaproject.notificationservice.repository.NotificationRepository;
-import com.javaproject.notificationservice.utils.NotificationType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +15,8 @@ import static com.javaproject.notificationservice.utils.ConstantsUtils.SENT_STAT
 import static com.javaproject.notificationservice.utils.DateUtils.getDayOfYear;
 import static com.javaproject.notificationservice.utils.NotificationType.NEWS;
 
-@Service("news")
+
+@Component("NEWS")
 public class NewsNotificationStrategy implements NotificationStrategy {
 
     @Autowired
@@ -31,12 +31,12 @@ public class NewsNotificationStrategy implements NotificationStrategy {
         Date nowDate = new Date();
         int todayNumber = getDayOfYear(nowDate);
 
-        List<NotificationEntity> notifications = repository.findAllByIdUserId(userId);
+        List<NotificationEntity> notifications = repository.findAllByIdUserIdAndType(userId, NEWS.name());
         if (notifications.isEmpty()) {
             String message_delivered_status = gateway.send(userId, message);
 
             if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS));
+                repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS.name()));
         }
         else {
             List<NotificationEntity> lastPeriodNotifications = notifications.stream()
@@ -45,10 +45,10 @@ public class NewsNotificationStrategy implements NotificationStrategy {
                 String message_delivered_status = gateway.send(userId, message);
 
                 if (Objects.equals(message_delivered_status, SENT_STATUS_OK))
-                    repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS));
+                    repository.save(new NotificationEntity(new NotificationKeyEntity(userId, new Date()), NEWS.name()));
             }
             else {
-                System.out.println("Notification of type News was already sent in this day.");
+                System.out.println("Notification of type news was already sent to customer today.");
             }
         }
     }
