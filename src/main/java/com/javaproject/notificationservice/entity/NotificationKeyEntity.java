@@ -11,10 +11,10 @@ import java.util.Objects;
 @Embeddable
 public class NotificationKeyEntity implements Serializable {
 
-    @Column(name="user_id")
+    @Column(name="user_id", nullable=false)
     private Long userId;
 
-    @Column(name="sent_date", nullable=false, unique = true)
+    @Column(name="sent_date", nullable=false)
     private Date sentDate;
 
     public NotificationKeyEntity() {}
