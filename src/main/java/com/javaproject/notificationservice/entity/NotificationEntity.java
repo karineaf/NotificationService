@@ -18,13 +18,12 @@ public class NotificationEntity implements Serializable {
     @EmbeddedId
     private NotificationKeyEntity id;
 
-    @Enumerated(STRING)
     @Column(length=50, nullable=false)
-    private NotificationType type;
+    private String type;
 
     public NotificationEntity() {}
 
-    public NotificationEntity(NotificationKeyEntity id, NotificationType type) {
+    public NotificationEntity(NotificationKeyEntity id, String type) {
         this.id = id;
         this.type = type;
     }
@@ -33,7 +32,7 @@ public class NotificationEntity implements Serializable {
         return id;
     }
 
-    public NotificationType getType() {
+    public String getType() {
         return type;
     }
 
@@ -42,7 +41,7 @@ public class NotificationEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificationEntity that = (NotificationEntity) o;
-        return Objects.equals(id, that.id) && type == that.type;
+        return Objects.equals(id, that.id) && Objects.equals(type, that.type);
     }
 
     @Override
