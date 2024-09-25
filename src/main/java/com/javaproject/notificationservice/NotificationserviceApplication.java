@@ -18,14 +18,14 @@ public class NotificationserviceApplication {
 		ApplicationContext context = SpringApplication.run(NotificationserviceApplication.class, args);
 		log.info("Notification service is running...");
 
-		NotificationService service = context.getBean(NotificationService.class);
-		service.send("marketing", 1L, "marketing 1");
-		service.send("marketing", 1L, "marketing 2");
-		service.send("marketing", 1L, "marketing 3");
-		service.send("marketing", 1L, "marketing 4");
-		service.send("update", 1L, "update 1");
-        service.send("news", 1L, "news 2");
-        service.send("news", 1L, "news 3");
-        service.send("news", 2L, "news 1");
+		// NotificationService service = context.getBean(NotificationService.class);
+		// service.send("marketing", 1L, "marketing 1");
+		// service.send("marketing", 1L, "marketing 2");
+		// service.send("marketing", 1L, "marketing 3");
+		// service.send("marketing", 1L, "marketing 4");
+		// service.send("update", 1L, "update 1");
+		// service.send("news", 1L, "news 2");
+		// service.send("news", 1L, "news 3");
+		//  service.send("news", 2L, "news 1");
 	}
 }

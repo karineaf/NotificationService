@@ -1,6 +1,12 @@
 package com.javaproject.notificationservice.services;
 
 
+import com.javaproject.notificationservice.model.Notification;
+
+import java.util.List;
+
 public interface NotificationService {
-    void send(String type, Long userId, String message);
+    void sendNotification(Notification notification);
+
+    List<Notification> getNotifications(Long userId);
 }

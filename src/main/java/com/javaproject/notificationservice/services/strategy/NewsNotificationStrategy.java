@@ -6,6 +6,7 @@ import com.javaproject.notificationservice.gateway.Gateway;
 import com.javaproject.notificationservice.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,11 +16,15 @@ import java.util.Objects;
 import static com.javaproject.notificationservice.utils.ConstantsUtils.SENT_STATUS_OK;
 import static com.javaproject.notificationservice.utils.DateUtils.getDayOfYear;
 import static com.javaproject.notificationservice.utils.NotificationType.NEWS;
+import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
 @Component("NEWS")
 public class NewsNotificationStrategy implements NotificationStrategy {
+
+    @Value("${news.max.requests}")
+    private static String NEWS_MAX_REQUESTS;
 
     @Autowired
     private Gateway gateway;
@@ -43,7 +48,7 @@ public class NewsNotificationStrategy implements NotificationStrategy {
             List<NotificationEntity> lastPeriodNotifications = notifications.stream()
                     .filter(n -> todayNumber == getDayOfYear(n.getId().getSentDate())).toList();
 
-            if (lastPeriodNotifications.isEmpty()){
+            if (lastPeriodNotifications.isEmpty() || lastPeriodNotifications.size() < parseInt(NEWS_MAX_REQUESTS)){
                 String messageDeliveredStatus = gateway.send(userId, message);
                 save(messageDeliveredStatus, userId);
             }

@@ -26,17 +26,10 @@ public class DateUtils {
         return cal.get(Calendar.DAY_OF_YEAR);
     }
 
-    public static Date getDateWithHourMinusThree(Date date){
+    public static Date getDateMinusMinutes(Date date, int minutes){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.HOUR, -3);
-        return cal.getTime();
-    }
-
-    public static Date getDateWithMinuteMinusOne(Date date){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.MINUTE, -1);
+        cal.add(Calendar.MINUTE, -minutes);
         return cal.getTime();
     }
 }

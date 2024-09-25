@@ -1,6 +1,8 @@
 package com.javaproject.notificationservice.utils;
 
 
+import org.springframework.beans.factory.annotation.Value;
+
 public final class ConstantsUtils {
 
     private ConstantsUtils() {
